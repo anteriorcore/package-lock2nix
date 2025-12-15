@@ -340,7 +340,7 @@ let
               mkNodeSingleDep {
                 src = fetchurl {
                   url = p.resolved;
-                  hash = p.integrity;
+                  hash = p.integrity or (throw "Required `integrity` missing in package-lock.json for ${name}");
                 };
                 name = lib.last hierarchy;
                 inherit (p) version;
