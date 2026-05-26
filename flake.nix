@@ -5,7 +5,7 @@
     # inputs to follow your flake’s inputs so as to minimize transitive flake
     # input explosion without affecting the functionality of the actual .lib.*
     # exports.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     systems.url = "systems";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     # Ok technically this is used for .lib. :) but I assume you can override
