@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    cooldown:
+      default-days: 10
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "nix"
+    cooldown:
+      default-days: 10
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "build"
