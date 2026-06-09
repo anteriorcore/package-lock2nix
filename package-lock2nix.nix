@@ -85,13 +85,10 @@ let
           ''
             set -euo pipefail
           ''
-          + lib.concatMapStringsSep "\n" (
-            { source, target }:
-            ''
-              mkdir -p "$1/"${lib.escapeShellArg (builtins.dirOf target)}
-              ln -s "$1/"${lib.escapeShellArg source} "$1/"${lib.escapeShellArg target}
-            ''
-          ) links
+          + lib.concatMapStringsSep "\n" ({ source, target }: ''
+            mkdir -p "$1/"${lib.escapeShellArg (builtins.dirOf target)}
+            ln -s "$1/"${lib.escapeShellArg source} "$1/"${lib.escapeShellArg target}
+          '') links
         );
 
       # Like rm -f, but also recursively remove any now-empty directories after
