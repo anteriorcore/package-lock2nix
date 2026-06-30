@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: cachix/install-nix-action@v31
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7.0.0
       - run: nix flake show
       - run: nix flake lock --no-update-lock-file
       - run: nix flake check --no-build
@@ -18,5 +18,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: cachix/install-nix-action@v31
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7.0.0
       - run: nix flake check -L --keep-going
