@@ -7,7 +7,7 @@ jobs:
   nix-flake-health:
     runs-on: ubuntu-latest
     steps:
-      - uses: cachix/install-nix-action@v31.10.6
+      - uses: cachix/install-nix-action@v31.10.7
       - uses: actions/checkout@v7.0.0
       - run: nix flake show
       - run: nix flake lock --no-update-lock-file
@@ -17,6 +17,6 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: cachix/install-nix-action@v31.10.6
+      - uses: cachix/install-nix-action@v31.10.7
       - uses: actions/checkout@v7.0.0
       - run: nix flake check -L --keep-going
