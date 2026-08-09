@@ -24,7 +24,7 @@ package-lock2nix is authored by [Anterior](https://anterior.com), based in NYC, 
 
 **We’re hiring!**  If you got this far, e-mail us at hiring+oss@anterior.com and mention package-lock2nix.
 
-The code is available under the AGPLv3 license (not later).
+The code is available under the GPLv3 license (not later).
 
 See the [LICENSE](LICENSE) file.
 
@@ -39,7 +39,7 @@ This project is _actually_ provided as-is: the license text truly applies.  We r
 - not accept pull requests
 - introduce changes which are only useful for us, Anterior.
 
-Seriously though!  Please be warned this is just a source code release under the AGPLv3.  It is not a commitment to becoming long time maintainers of this project for public consumption.  We want to give back code, and we really do hope this is useful to you, but we’re too busy to be maintainers at the moment.  The license says it very well:
+Seriously though!  Please be warned this is just a source code release under the GPLv3.  It is not a commitment to becoming long time maintainers of this project for public consumption.  We want to give back code, and we really do hope this is useful to you, but we’re too busy to be maintainers at the moment.  The license says it very well:
 
 > This program is distributed in the hope that it will be useful,
 > but WITHOUT ANY WARRANTY; without even the implied warranty of
