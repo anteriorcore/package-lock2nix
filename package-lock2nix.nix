@@ -246,8 +246,14 @@ let
           # https://discourse.nixos.org/t/unpack-phase-permission-denied/13382/4
           plan9UnpackPhase = ''
             unpackFile() {
-              ${plan9port}/plan9/bin/tar xf "$1"
-              rm -rf PaxHeader
+              # Directory sources (e.g. git-pinned deps) are already unpacked.
+              # Let the default unpacker do its thing.
+              if [[ -d "$1" ]]; then
+                _defaultUnpack "$1"
+              else
+                ${plan9port}/plan9/bin/tar xf "$1"
+                rm -rf PaxHeader
+              fi
             }
           '';
           prePhases = [ "plan9UnpackPhase" ];
@@ -292,7 +298,8 @@ let
       #
       # LinkSpec = { link : Boolean; resolved : String; }
       # FetchSpec = { resolved: String; integrity : String; hierarchy: [ String ] }
-      # packages :: { String : LinkSpec | FetchSpec }
+      # GitSpec = { resolved: String; version: String; hierarchy: [ String ] }
+      # packages :: { String : LinkSpec | FetchSpec | GitSpec }
       mkNodeModules'' =
         {
           # Used only for linked (local) dependencies
@@ -334,11 +341,36 @@ let
                 passthru.hierarchy = hierarchy;
               }
             else
+              let
+                proto = builtins.head (builtins.match "^([a-zA-Z0-9+_-]+):.*" p.resolved);
+                src =
+                  if (proto == "git" || lib.hasPrefix "git+" proto) then
+                    # git-pinned dependencies look like:
+                    #
+                    #   "resolved": "git+ssh://git@github.com/owner/repo.git#<sha>"
+                    #   "resolved": "git+https://github.com/owner/repo.git#<sha>"
+                    #
+                    # Note that they carry no `integrity`.
+                    let
+                      parts = lib.splitString "#" p.resolved;
+                      url = lib.removePrefix "git+" (builtins.head parts);
+                      rev = lib.last parts;
+                    in
+                    assert lib.assertMsg (
+                      lib.length parts > 1
+                    ) "Required `#rev` missing in package-lock.json for ${name}";
+                    fetchGit {
+                      inherit url rev;
+                      shallow = true;
+                    }
+                  else
+                    fetchurl {
+                      url = p.resolved;
+                      hash = p.integrity or (throw "Required `integrity` missing in package-lock.json for ${name}");
+                    };
+              in
               mkNodeSingleDep {
-                src = fetchurl {
-                  url = p.resolved;
-                  hash = p.integrity or (throw "Required `integrity` missing in package-lock.json for ${name}");
-                };
+                inherit src;
                 name = lib.last hierarchy;
                 inherit (p) version;
                 passthru.hierarchy = hierarchy;
