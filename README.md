@@ -14,9 +14,27 @@ The big win: **no separate Nix codegen step.** When you update your package-lock
 - every dependency independently cached
 - same final on-disk node_modules lay-out as npm
 
-## API
+## Usage
 
-There is no official API documentation but there are examples and regression tests in [`tests`](tests).
+Quickstart, assuming flakes:
+
+```
+{
+  inputs.package-lock2nix.url = "github:anteriorcore/package-lock2nix";
+
+  outputs = { package-lock2nix, nixpkgs, ... }: let
+    pkgs = nixpkgs.legacyPackages.aarch64-linux;
+    package-lock2nix = pkgs.callPackage package-lock2nix.lib.package-lock2nix { };
+  in
+  {
+
+    packages.aarch64-linux.default = package-lock2nix.mkNpmModule { src = ./.; };
+
+  };
+}
+```
+
+There is no official API documentation but there are advanced examples and regression tests in [`tests`](tests).
 
 ## Copyright & License
 
