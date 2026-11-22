@@ -358,7 +358,10 @@ let
           # names of this fixpoint, which crashes if the overlay tries to access
           # unknown items on the prev.
           sourcesFlat = builtins.intersectAttrs sourcesFlatRaw sourcesFlat';
-          sources = lib.foldl' lib.recursiveUpdate { } (
+          mergeTrees = lib.zipAttrsWith (
+            _: subs: if lib.length subs == 1 then builtins.elemAt subs 0 else mergeTrees subs
+          );
+          sources = mergeTrees (
             lib.mapAttrsToList (
               path: deriv: lib.setAttrByPath (getHierarchy path deriv) { "." = deriv; }
             ) sourcesFlat
