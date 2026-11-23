@@ -795,7 +795,12 @@ let
       mkNpmModule =
         {
           src,
-          packageLock ? builtins.fromJSON (builtins.readFile (src + "/package-lock.json")),
+          # Override this if the source directory for nix build purposes isn’t
+          # the same as the directory where to find the actual
+          # package(-lock).json.  This can happen if you need to cd into the
+          # “real” source half-way during a build.
+          packageJsonSrc ? src,
+          packageLock ? builtins.fromJSON (builtins.readFile (packageJsonSrc + "/package-lock.json")),
           # I think there is a better way to do this but I’m too grug
           npmOverrides ? self: super: { },
           ...
@@ -805,7 +810,7 @@ let
             self:
             let
               inherit (self.passthru) nodeModules;
-              packageJson = builtins.fromJSON (builtins.readFile (src + "/package.json"));
+              packageJson = builtins.fromJSON (builtins.readFile (packageJsonSrc + "/package.json"));
             in
             {
               inherit (packageLock) name;
